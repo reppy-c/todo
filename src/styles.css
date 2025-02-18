@@ -1,0 +1,85 @@
+body {
+    border-top: 8px solid #699AC1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+    font-family: "Nunito", serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+    color: #427ABB;
+
+    margin: 2rem 0 1rem 0;
+}
+
+#utility-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 100%;
+    padding: 0 1rem;
+
+    font-family: Nunito;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.todo-list {
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.todo-item {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+
+    background-color: #E5EDF6;
+    width: 100%;
+    border-radius: 4px;
+    padding: 12px 1rem;
+
+    color: #30232C;
+}
+
+.todo-item .checkbox {
+    content:url('checkbox.svg');
+    opacity: 0.5;
+    margin: 3px 12px 0 0;
+}
+
+.todo-item .priority.high{
+    content:url('priority-high.svg');
+    align-self: center;
+}
+
+.todo-item .text-items {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.todo-item .text-items .description {
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.todo-item .text-items .due-date {
+    font-family: Nunito;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
