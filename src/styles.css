@@ -1,5 +1,5 @@
 body {
-    border-top: 8px solid #699AC1;
+    border-top: 0.5rem solid #699AC1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,20 +21,35 @@ h1 {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 
     width: 100%;
     padding: 0 1rem;
 
     font-family: Nunito;
-    font-size: 13px;
+    font-size: 0.813rem;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
 }
 
+#utility-bar #viewing {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+#utility-bar #sort {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .todo-list {
     width: 100%;
     padding: 0 1rem;
+    margin: 0.5rem 0;
 }
 
 .todo-item {
@@ -44,8 +59,8 @@ h1 {
 
     background-color: #E5EDF6;
     width: 100%;
-    border-radius: 4px;
-    padding: 12px 1rem;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1rem;
 
     color: #30232C;
 }
@@ -53,11 +68,16 @@ h1 {
 .todo-item .checkbox {
     content:url('checkbox.svg');
     opacity: 0.5;
-    margin: 3px 12px 0 0;
+    margin: 0.1875rem 0.75rem 0 0;
 }
 
 .todo-item .priority.high{
     content:url('priority-high.svg');
+    align-self: center;
+}
+
+.todo-item .priority.max{
+    content:url('priority-max.svg');
     align-self: center;
 }
 
@@ -69,7 +89,7 @@ h1 {
 
 .todo-item .text-items .description {
     font-family: Nunito;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -77,9 +97,30 @@ h1 {
 
 .todo-item .text-items .due-date {
     font-family: Nunito;
-    font-size: 12px;
+    font-size: 0.75rem;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
 }
 
+#utility-footer {
+    width: 100%;
+    padding: 0 1rem;
+    margin: 0.5rem 0 0 0;
+}
+
+#utility-footer #add-todo {
+    width: 100%;
+    border-radius: 0.25rem;
+    border: 0;
+    background: #427ABB;
+    color: #FFF;
+    padding: 0.813rem 0;
+
+    text-align: center;
+    font-family: Nunito;
+    font-size: 0.9375rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
