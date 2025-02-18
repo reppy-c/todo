@@ -10,29 +10,45 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>TODO</h1>
+    <div id="utility-header">
+        <h1>TODO</h1>
 
-    <div id="utility-bar">
-        <div id="viewing"><img src="icons/everything.svg" />Everything</div>
-        <div id="sort">By Priority<img src="dropdown.svg" /></div>
-        
+        <div id="utility-bar">
+            <div id="viewing"><img src="icons/everything.svg" />Everything</div>
+            <div id="sort">By Priority<img src="dropdown.svg" /></div> 
+        </div>
     </div>
 
-    <ul class="todo-list">
-        <li class="todo-item">
-            <div class="checkbox">
-            </div>
-            <div class="text-items">
-                <span class="description">Item Description</span>
-                <span class="due-date">Today</span>
-            </div>
-            <div class="priority high">
-            </div>
-        </li>
-    </ul>
+    <div id="middle">
+        <div id="sidebar">
+            <ul class="inboxes">
+                <li class="current">Everything</li>
+                <li>Today</li>
+                <li>High Priority</li>
+            </ul>
+            <hr/>
+            <ul class="projects">
+                <li>Project 1</li>
+                <li>Project 2</li>
+                <li>Project 3</li>
+            </ul>
+        </div>
+        <div id="mainbar">
+            <ul class="todo-list">
+                <li class="todo-item">
+                    <div class="checkbox">
+                    </div>
+                    <div class="text-items">
+                        <span class="description">Item Description</span>
+                        <span class="due-date">Today</span>
+                    </div>
+                    <div class="priority high">
+                    </div>
+                </li>
+            </ul>
 
-    <div id="utility-footer">
-        <button id="add-todo">Add TODO</button>
+            <button id="add-todo">Add TODO</button>
+        </div>
     </div>
 
 </body>

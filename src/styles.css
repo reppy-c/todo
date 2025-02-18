@@ -1,10 +1,19 @@
 body {
-    border-top: 0.5rem solid #699AC1;
+    border-top: 0.5rem solid #6895C9;
+    padding: 0 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
+
+    @media (min-width: 1024px) {
+        border: none;
+        align-items: start;
+        max-width: 1024px;
+        margin: 0 auto;
+        height: 100vh;
+    }
 }
 
 h1 {
@@ -12,7 +21,25 @@ h1 {
     font-optical-sizing: auto;
     font-weight: 900;
     color: #427ABB;
-    margin: 2rem 0 1rem 0;
+    margin: 1.5rem 0 1rem 0;
+
+    @media (min-width: 1024px) {
+        font-size: 2.5rem;
+        margin-bottom: 0;
+    }       
+}
+
+#utility-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    @media (min-width: 1024px) {
+        display: flex;
+        flex-direction: row;
+        align-items: end;
+    }  
 }
 
 #utility-bar {
@@ -20,14 +47,16 @@ h1 {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
     width: 100%;
-    padding: 0 1rem;
 
     font-family: Nunito;
     font-size: 0.813rem;
     font-weight: 600;
     line-height: normal;
+
+    @media (min-width: 1024px) {
+        justify-content: end;
+    }       
 }
 
 #utility-bar #viewing {
@@ -35,6 +64,10 @@ h1 {
     flex-direction: row;
     align-items: center;
     gap: 0.25rem;
+
+    @media (min-width: 1024px) {
+        display: none;
+    }       
 }
 
 #utility-bar #sort {
@@ -43,10 +76,72 @@ h1 {
     align-items: center;
 }
 
+#middle {
+    height: 100%;
+    width: 100%;
+    margin: 0.5rem 0 0 0;
+    
+    @media (min-width: 1024px) {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+}
+
+#sidebar {
+    min-width: 240px;
+    background-color: #6895C9;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius:  0.25rem;
+    display: none;
+
+    padding: 1.5rem 1rem;
+
+    @media (min-width: 1024px) {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }       
+}
+
+#sidebar hr {
+    width: 100%;
+    opacity: 0.2;
+}
+
+#sidebar ul {
+    padding: 0;
+    margin: 0;
+}
+
+#sidebar ul li {
+    list-style: none;
+    color: #FFF;
+    font-family: Nunito;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0.275rem 0;
+}
+
+#sidebar ul li.current{
+    font-weight: 700;
+}
+
+#mainbar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: 1024px) {
+        align-items: end;
+    }       
+}
+
 .todo-list {
     width: 100%;
-    padding: 0 1rem;
-    margin: 0.5rem 0;
+    padding: 0;
+    margin: 0;
 }
 
 .todo-item {
@@ -98,22 +193,22 @@ h1 {
     line-height: normal;
 }
 
-#utility-footer {
-    width: 100%;
-    padding: 0 1rem;
-    margin: 0.5rem 0 0 0;
-}
-
-#utility-footer #add-todo {
+#mainbar #add-todo {
     width: 100%;
     border-radius: 0.25rem;
     border: 0;
     background: #427ABB;
     color: #FFF;
     padding: 0.813rem 0;
+    margin: 0.5rem 0 0 0;
 
     font-family: Nunito;
     font-size: 0.9375rem;
     font-weight: 700;
     line-height: normal;
+
+    @media (min-width: 1024px) {
+        width: auto;
+        padding: 0.813rem 4rem;
+    }       
 }
