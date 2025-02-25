@@ -261,3 +261,121 @@ h1 {
     }       
 }
 
+/**** Create TODO and Create Project modals ****/
+
+#modal-scrim {
+    display:none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+}
+
+.modal-create {
+    position: fixed;
+    background-color: #FFF;
+    z-index: 1000;
+    padding: 2rem;
+    display:flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    bottom: 0;
+    border-radius: 0.5rem 0.5rem 0 0;
+
+    @media (min-width: 1024px) {
+        width: 375px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 0.5rem;
+        bottom: auto;
+    }
+}
+
+#modal-create-todo {
+  display: none;
+}
+
+#modal-create-project {
+ display: none;
+}
+
+.modal-create h2 {
+    font-family: Nunito;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.015rem;
+    margin: 0;
+}
+
+.modal-create label {
+    color: #30232C;
+    font-family: Nunito;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.modal-create input {
+    color: #30232C;
+    font-family: Nunito;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 0.5rem 0.5rem;
+}
+
+.modal-create .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.modal-create .field-priority {
+    gap: 0;
+    color: #30232C;
+    font-family: Nunito;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.modal-create .field-radio {
+    line-height: normal;
+}
+
+.modal-create .button-add {
+    width: 100%;
+    border-radius: 0.25rem;
+    border: 0;
+    background: #427ABB;
+    color: #FFF;
+    padding: 0.813rem 0;
+    margin: 0.5rem 0 0 0;
+
+    font-family: Nunito;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: normal;
+
+    @media (min-width: 1024px) {
+        width: auto;
+        padding: 0.813rem 4rem;
+    }       
+}
+
+.button-close {
+    position: absolute;
+    top: 0.875rem;
+    right: 0.875rem;
+    background: none;
+    border: none;
+    color: #30232C;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width:24px;
+    height:24px;
+}

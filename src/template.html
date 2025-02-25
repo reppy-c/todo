@@ -52,5 +52,41 @@
         </div>
     </div>
 
+    <div id="modal-scrim"></div>
+    
+    <div id="modal-create-todo" class="modal-create">
+        <h2>Add TODO</h2>
+        <div class="field">
+            <label for="todo-description">Description</label>
+            <input type="text" id="todo-description" placeholder="Description" />
+        </div>
+        <div class="field">
+            <label for="todo-due-date">Due Date (Optional)</label>
+            <input type="date" id="todo-due-date" />
+        </div>
+        <div class="field-priority">
+            Priority
+            <div class="field-radio"><input type="radio" id="priority-1" name="priority" value="normal" /> <label for="priority-1">Normal</label></div>
+            <div class="field-radio"><input type="radio" id="priority-2" name="priority" value="high" /> <label for="priority-2">High</label></div>
+            <div class="field-radio"><input type="radio" id="priority-3" name="priority" value="very-high" /> <label for="priority-3">Very High</label></div>
+        </div>
+        <button id="add-todo" class="button-add">Add TODO</button>
+        <button id="close-modal-create-todo" class="button-close">
+            <img src="icons/close.svg" />
+        </button>
+    </div>
+
+    <div id="modal-create-project" class="modal-create">
+        <h2>New Project</h2>
+        <div class="field">
+            <label for="project-name">Project Name</label>
+            <input type="text" id="project-name" placeholder="Description" />
+        </div>
+        <button id="add-project" class="button-add">Create Project</button>
+        <button id="close-modal-create-project" class="button-close">
+            <img src="icons/close.svg" />
+        </button>
+    </div>
+
 </body>
 </html>
