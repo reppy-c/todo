@@ -1,22 +1,20 @@
-// Named constants
-const COMPLETE = true;
-const INCOMPLETE = false;
-const PRIORITY_NORMAL = "normal";
-const PRIORITY_HIGH = "high";
-const PRIORITY_VERYHIGH = "very high";
+import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_VERYHIGH } from './constants.js';
 
-function createItem(title, description, date, priority) {
-    return {
-        title,
-        description,
-        date,
-        priority,
-        completed: INCOMPLETE,
+function createItem(description, date, priority) {
+    
+    const id = Date.now() + Math.random().toString(36).substr(2, 9);
 
-        toggleCompleted() {
-            this.completed = !this.completed;
-        }
-    };
+    // I like declaring functions this way for readbility
+    // Afterwards need to return { functionName }
+    function functionName() {
+
+    }
+    
+    function toggleCompleted() {
+        this.completed = !this.completed;
+    }
+
+    return {id};
 }
 
 export default createItem;

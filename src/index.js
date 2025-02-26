@@ -3,6 +3,10 @@ import "./styles.css";
 import createProject from "./project.js";
 import { format } from "date-fns";  
 
-const project = createProject("My Project");
+// This is an IIFE (immediately invoked function expression), basically the main loop
+const main = (function () {
 
-console.log(project.name);
+    // Create default project
+    const project = createProject("My Project");
+    
+})();
