@@ -283,7 +283,7 @@ h1 {
 /**** Create TODO and Create Project modals ****/
 
 #modal-scrim {
-    display:none;
+    display:block;
     position: fixed;
     top: 0;
     left: 0;
@@ -291,6 +291,14 @@ h1 {
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 999;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+#modal-scrim.show {
+    visibility: visible;
+    opacity: 1;
 }
 
 .modal-create {
@@ -302,8 +310,8 @@ h1 {
     flex-direction: column;
     gap: 1rem;
     width: 100%;
-    bottom: 0;
     border-radius: 0.5rem 0.5rem 0 0;
+    opacity: 0;
 
     @media (min-width: 1024px) {
         width: 375px;
@@ -311,16 +319,34 @@ h1 {
         left: 50%;
         transform: translate(-50%, -50%);
         border-radius: 0.5rem;
-        bottom: auto;
     }
 }
 
 #modal-create-todo {
-  display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+    bottom: -100%;
+    transition: bottom 0.2s ease-out;
+    
+
+    @media (min-width: 1024px) {
+        bottom: auto;
+    }
+}
+
+#modal-create-todo.show {
+    visibility: visible;
+    bottom: 0;
+    opacity: 1;
+
+    @media (min-width: 1024px) {
+        bottom: auto;
+    }
 }
 
 #modal-create-project {
- display: none;
+    display: none;
 }
 
 .modal-create h2 {
