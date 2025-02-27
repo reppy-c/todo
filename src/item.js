@@ -1,4 +1,4 @@
-import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './constants.js';
+import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
 
 function createItem(description, date, priority) {
     

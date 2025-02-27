@@ -1,5 +1,5 @@
-import "./reset.css";
-import "./styles.css";
+import "./css/reset.css";
+import "./css/styles.css";
 import createProject from "./project.js";
 import { initializeController } from "./controller.js";  
 

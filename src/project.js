@@ -1,5 +1,5 @@
 import createItem from "./item.js";
-import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './constants.js';
+import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
 
 // Factory function for creating projects
 function createProject(projectName) {
@@ -14,7 +14,7 @@ function createProject(projectName) {
 
         let item = createItem(description, date, priority);
         items.push(item);
-        
+
         return(item.id);
     }
 

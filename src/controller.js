@@ -1,8 +1,8 @@
-import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './constants.js';
+import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
 
 import createItem from "./item.js";
 import createProject from "./project.js";
-import formatDate from "./dateformatter.js";
+import formatDate from "./utils/dateformatter.js";
 
 // Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
 import menuIconURL from "./icons/menu.svg";
@@ -10,23 +10,25 @@ import menuIconURL from "./icons/menu.svg";
 const li_list = document.querySelector('#todo-list');
 let currentProject;
 
+// Function to create HTML out of a todo object using template literals
+const itemHTML = (todo) => `
+    <div class="checkbox">
+    </div>
+    <div class="text-items">
+        <span class="description">${todo.description}</span>
+        <span class="second-line">
+            <div class="priority ${todo.priority}"></div>
+            <span class="due-date">${formatDate(todo.date)}</span>
+        </span>
+    </div>
+    
+    <button class="item-menu"><img src="${menuIconURL}" /></button>
+`;
+
+// Attach event listener to Add TODO button
+
 // This is the one function that will be called by index.js
 export function initializeController() {
-
-    // Function to create HTML out of a todo object using template literals to make it easier to create the HTML.
-    const itemHTML = (todo) => `
-        <div class="checkbox">
-        </div>
-        <div class="text-items">
-            <span class="description">${todo.description}</span>
-            <span class="second-line">
-                <div class="priority ${todo.priority}"></div>
-                <span class="due-date">${formatDate(todo.date)}</span>
-            </span>
-        </div>
-     
-        <button class="item-menu"><img src="${menuIconURL}" /></button>
-    `;
 
     // Create a whole bunch of these and attach it to #todo-list ul as children li
     function displayItems(order) {       

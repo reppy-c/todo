@@ -129,28 +129,28 @@ h1 {
 }
 
 #sidebar .inboxes li.everything::before {
-    content:url('icons/sidebar-everything.svg');
+    content:url('../icons/sidebar-everything.svg');
     align-self: center;
     height: 16px;
     width: 16px;
 }
 
 #sidebar .inboxes li.today::before {
-    content:url('icons/sidebar-today.svg');
+    content:url('../icons/sidebar-today.svg');
     align-self: center;
     height: 16px;
     width: 16px;
 }
 
 #sidebar .inboxes li.high-priority::before {
-    content:url('icons/sidebar-priority.svg');
+    content:url('../icons/sidebar-priority.svg');
     align-self: center;
     height: 16px;
     width: 16px;
 }
 
 #sidebar .projects li.proj::before {
-    content:url('icons/project.svg');
+    content:url('../icons/project.svg');
     align-self: center;
     height: 16px;
     width: 16px;
@@ -207,20 +207,20 @@ h1 {
 }
 
 .todo-item .checkbox {
-    content:url('icons/checkbox.svg');
+    content:url('../icons/checkbox.svg');
     opacity: 0.5;
     margin: 0.1875rem 0.75rem 0 0;
 }
 
 .todo-item .priority.high{
-    content:url('icons/priority-high.svg');
+    content:url('../icons/priority-high.svg');
     align-self: center;
     width: 1rem;
     height: 1rem;
 }
 
 .todo-item .priority.max{
-    content:url('icons/priority-max.svg');
+    content:url('../icons/priority-max.svg');
     align-self: center;
     width: 1rem;
     height: 1rem;
