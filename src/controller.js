@@ -2,6 +2,7 @@ import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './constants.js';
 
 import createItem from "./item.js";
 import createProject from "./project.js";
+import formatDate from "./dateformatter.js";
 
 const li_list = document.querySelector('#todo-list');
 let currentProject;
@@ -9,13 +10,13 @@ let currentProject;
 // This is the one function that will be called by index.js
 export function initializeController() {
 
-    // Function to create HTML out of a todo object
+    // Function to create HTML out of a todo object using template literals to make it easier to create the HTML.
     const itemHTML = (todo) => `
         <div class="checkbox">
         </div>
         <div class="text-items">
             <span class="description">${todo.description}</span>
-            <span class="due-date">${todo.date}</span>
+            <span class="due-date">${formatDate(todo.date)}</span>
         </div>
         <div class="priority ${todo.priority}">
         </div>
