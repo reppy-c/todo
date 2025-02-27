@@ -1,7 +1,7 @@
 // Named constants
 
-const COMPLETE = true;
-const INCOMPLETE = false;
-const PRIORITY_NORMAL = "normal";
-const PRIORITY_HIGH = "high";
-const PRIORITY_VERYHIGH = "very high";
+export const COMPLETE = true;
+export const INCOMPLETE = false;
+export const PRIORITY_NORMAL = "normal";
+export const PRIORITY_HIGH = "high";
+export const PRIORITY_MAX = "max";

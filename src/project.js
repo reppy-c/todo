@@ -1,5 +1,5 @@
 import createItem from "./item.js";
-import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_VERYHIGH } from './constants.js';
+import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './constants.js';
 
 // Factory function for creating projects
 function createProject(projectName) {
@@ -11,14 +11,16 @@ function createProject(projectName) {
     
     // Function called by the controller, returns an ID that can be put into the DOM for future reference
     function addItem(description, date, priority) {
+
         let item = createItem(description, date, priority);
         items.push(item);
+        
         return(item.id);
     }
 
     // Returns a copy of list of items in project, parameter determines the order its returned in
     function getItems() {
-
+        return items;
     }
 
     return {id, addItem, getItems};

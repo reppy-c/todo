@@ -1,4 +1,4 @@
-import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_VERYHIGH } from './constants.js';
+import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './constants.js';
 
 function createItem(description, date, priority) {
     
@@ -14,7 +14,7 @@ function createItem(description, date, priority) {
         this.completed = !this.completed;
     }
 
-    return {id};
+    return {id, description, date, priority, toggleCompleted};
 }
 
 export default createItem;
