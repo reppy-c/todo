@@ -4,6 +4,9 @@ import createItem from "./item.js";
 import createProject from "./project.js";
 import formatDate from "./dateformatter.js";
 
+// Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
+import menuIconURL from "./icons/menu.svg";
+
 const li_list = document.querySelector('#todo-list');
 let currentProject;
 
@@ -16,10 +19,13 @@ export function initializeController() {
         </div>
         <div class="text-items">
             <span class="description">${todo.description}</span>
-            <span class="due-date">${formatDate(todo.date)}</span>
+            <span class="second-line">
+                <div class="priority ${todo.priority}"></div>
+                <span class="due-date">${formatDate(todo.date)}</span>
+            </span>
         </div>
-        <div class="priority ${todo.priority}">
-        </div>
+     
+        <button class="item-menu"><img src="${menuIconURL}" /></button>
     `;
 
     // Create a whole bunch of these and attach it to #todo-list ul as children li
