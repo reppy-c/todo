@@ -6,7 +6,7 @@ import createProject from "./project";
 let projects = [];
 
 export function addProject(name) {
-    const newProject= createProject("My Project");
+    const newProject= createProject(name);
     projects.push(newProject)
 
     return newProject;

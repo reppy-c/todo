@@ -177,6 +177,7 @@ h1 {
     color: #FFF;
     padding: 0.5rem 1rem;
     margin: 0.5rem 0 0 0;
+    cursor: pointer;
 
     font-family: Nunito;
     font-size: 0.75rem;
@@ -261,7 +262,6 @@ h1 {
     line-height: normal;
 }
 
-
 .todo-item button {
     border: 0;
     background: none;
@@ -330,7 +330,7 @@ h1 {
     }
 }
 
-#modal-create-todo {
+#modal-create-todo, #modal-create-project {
     visibility: hidden;
     opacity: 0;
     bottom: -100%;
@@ -341,17 +341,13 @@ h1 {
     }
 }
 
-#modal-create-todo.show {
+#modal-create-todo.show, #modal-create-project.show {
     bottom: 0;
     opacity: 1;
 
     @media (min-width: 1024px) {
         bottom: auto;
     }
-}
-
-#modal-create-project {
-    display: none;
 }
 
 .modal-create h2 {

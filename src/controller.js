@@ -17,8 +17,12 @@ const div_scrim = document.querySelector('#modal-scrim');
 const div_modal_create_todo = document.querySelector('#modal-create-todo');
 const div_modal_create_project = document.querySelector('#modal-create-project');
 const btn_add_todo = document.querySelector("#add-todo");
+const btn_add_project = document.querySelector("#add-project");
 const btn_close_todo = document.querySelector("#close-modal-create-todo");
+const btn_close_project = document.querySelector("#close-modal-create-project");
 const btn_create_todo = document.querySelector("#create-todo");
+const btn_create_project = document.querySelector("#create-project");
+
 
 // Other variables
 let currentProject;
@@ -136,8 +140,18 @@ function addEventListeners() {
         showModal(div_modal_create_todo);
     });
 
+    // Add Project button
+    btn_add_project.addEventListener("click", () => {
+        showModal(div_modal_create_project);
+    });
+
     // Close TODO button
     btn_close_todo.addEventListener("click", () => {
+        hideModal();
+    });
+
+    // Close Project button
+    btn_close_project.addEventListener("click", () => {
         hideModal();
     });
 
@@ -172,6 +186,20 @@ function addEventListeners() {
             document.querySelector("#todo-description").value = "";
             document.querySelector("#todo-due-date").value = "";
             document.querySelector("#priority-1").checked = true
+        }, 300); 
+    });
+
+    // Create Project button in modal
+    btn_create_project.addEventListener("click", () => {
+        
+        const name = document.querySelector("#project-name").value;
+        addProject(name);
+        displayProjects();
+
+        // Now hide modal and reset the fields after its hidden for next time
+        hideModal();
+        setTimeout(() => {
+            document.querySelector("#project-name").value = "";
         }, 300); 
 
     });
