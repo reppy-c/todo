@@ -23,7 +23,7 @@ function createProject(projectName) {
         return items;
     }
 
-    return {id, addItem, getItems};
+    return {id, name, addItem, getItems};
 }
 
 export default createProject;

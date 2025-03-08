@@ -3,6 +3,7 @@ import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.
 import createItem from "./item.js";
 import createProject from "./project.js";
 import formatDate from "./utils/dateformatter.js";
+import { initializeProjects, getProjects, addProject } from './manager.js';
 
 // Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
 import menuIconURL from "./icons/menu.svg";
@@ -10,7 +11,8 @@ import { addMinutes } from 'date-fns';
 
 
 // Define constants for the different DOM elements
-const li_list = document.querySelector('#todo-list');
+const ul_list = document.querySelector('#todo-list');
+const ul_projects = document.querySelector('#projects-list');
 const div_scrim = document.querySelector('#modal-scrim');
 const div_modal_create_todo = document.querySelector('#modal-create-todo');
 const div_modal_create_project = document.querySelector('#modal-create-project');
@@ -37,9 +39,36 @@ const itemHTML = (todo) => `
     <button class="item-menu"><img src="${menuIconURL}" /></button>
 `;
 
+// Function to create HTML out of a project using template literals
+const projectHTML = (proj) => `
+    <a href="">${proj.name}</a>
+`;
+
+
+// Display all current projects
+function displayProjects() {     
+
+    // Empty the project list in the sidebar
+    ul_projects.innerHTML = "";
+
+    // Iterate through each project and render each to the sidebar
+    let projects = getProjects().forEach((proj) => {
+        const projectToCreate = document.createElement("li");
+
+        projectToCreate.classList.add("proj");
+        projectToCreate.innerHTML = projectHTML(proj);
+        projectToCreate.setAttribute('data-id', proj.id);
+        
+        ul_projects.append(projectToCreate);
+    });
+}
+
 // Create a whole bunch of these and attach it to #todo-list ul as children li
 function displayItems(order) {       
     
+    // Empty the list before rendering it
+    ul_list.innerHTML = "";
+
     // Iterate through current project
     currentProject.getItems().forEach((todo) => {
         // Create a li element
@@ -55,16 +84,11 @@ function displayItems(order) {
         itemToCreate.innerHTML = itemHTML(todo);
 
         // Append the li to the actual DOM
-        li_list.append(itemToCreate);
+        ul_list.append(itemToCreate);
 
         // Attach event listeners for checkbox and the menu
 
     });
-}
-
-// Just empty out the DOM list so we can re-render it
-function clearItems() {
-    li_list.innerHTML = "";
 }
 
 function showModal(modal) {
@@ -139,10 +163,17 @@ function addEventListeners() {
         // Add the item to the current project
         currentProject.addItem(description, adjustedDate, priority);
 
-
-        li_list.innerHTML = "";
+        // Clear the list and re-render
         displayItems();
+        
+        // Now hide modal and reset the fields after its hidden for next time
         hideModal();
+        setTimeout(() => {
+            document.querySelector("#todo-description").value = "";
+            document.querySelector("#todo-due-date").value = "";
+            document.querySelector("#priority-1").checked = true
+        }, 300); 
+
     });
 
 }
@@ -151,12 +182,10 @@ function addEventListeners() {
 export function initializeController() {
 
     // Create default project
-    currentProject = createProject("My Project");
-    currentProject.addItem("My first item", new Date(), PRIORITY_NORMAL);
-    currentProject.addItem("My second item", new Date(), PRIORITY_HIGH);
-    currentProject.addItem("My third item", new Date(), PRIORITY_MAX);
+    currentProject = initializeProjects();
     
     // Display items
     displayItems();
+    displayProjects();
     addEventListeners();
 }

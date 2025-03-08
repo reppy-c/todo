@@ -149,11 +149,19 @@ h1 {
     width: 16px;
 }
 
-#sidebar .projects li.proj::before {
+#sidebar #projects-list li.proj::before {
     content:url('../icons/project.svg');
     align-self: center;
     height: 16px;
     width: 16px;
+}
+
+#sidebar #projects-list a {
+    text-decoration: none;
+}
+
+#sidebar #projects-list a:hover {
+    font-weight: 800;
 }
 
 #sidebar ul li.current{
