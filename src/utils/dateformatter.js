@@ -16,6 +16,6 @@ export default function formatDate(date) {
     }
 
     else {
-        return format(date, "MMMM do");
+        return format(date, "MMMM d");
     }
 }
