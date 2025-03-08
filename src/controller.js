@@ -23,7 +23,6 @@ const btn_close_project = document.querySelector("#close-modal-create-project");
 const btn_create_todo = document.querySelector("#create-todo");
 const btn_create_project = document.querySelector("#create-project");
 
-
 // Other variables
 let currentProject;
 let currentModal;
@@ -45,7 +44,7 @@ const itemHTML = (todo) => `
 
 // Function to create HTML out of a project using template literals
 const projectHTML = (proj) => `
-    <a href="">${proj.name}</a>
+    <button>${proj.name}</button>
 `;
 
 
@@ -128,8 +127,6 @@ function hideModal() {
     setTimeout(() => {
         div_scrim.style.visibility = 'hidden';
     }, 300); // Match the duration of the CSS transition
-
-    
 }
 
 // Attach all the event listeners
@@ -201,9 +198,7 @@ function addEventListeners() {
         setTimeout(() => {
             document.querySelector("#project-name").value = "";
         }, 300); 
-
     });
-
 }
 
 // This is the one function that will be called by index.js

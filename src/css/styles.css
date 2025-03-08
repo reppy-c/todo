@@ -149,6 +149,16 @@ h1 {
     width: 16px;
 }
 
+#sidebar ul li button {
+    display:block;
+    border: 0;
+    background: none;
+    color: #FFF;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+}
+
 #sidebar #projects-list li.proj::before {
     content:url('../icons/project.svg');
     align-self: center;
@@ -164,7 +174,7 @@ h1 {
     font-weight: 800;
 }
 
-#sidebar ul li.current{
+#sidebar ul li.current button{
     font-weight: 800;
 }
 
