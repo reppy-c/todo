@@ -3,7 +3,7 @@ import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.
 import createItem from "./item.js";
 import createProject from "./project.js";
 import formatDate from "./utils/dateformatter.js";
-import { initializeProjects, getProjects, addProject } from './manager.js';
+import { initializeProjects, getProject, getProjects, addProject } from './manager.js';
 
 // Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
 import menuIconURL from "./icons/menu.svg";
@@ -44,11 +44,21 @@ const itemHTML = (todo) => `
 
 // Function to create HTML out of a project using template literals
 const projectHTML = (proj) => `
-    <button>${proj.name}</button>
+    <button data-id="${proj.id}">${proj.name}</button>
 `;
 
+// Set the current project and refresh the project list
+function setCurrentProject(id) {
 
-// Display all current projects
+    // Set the global variable for the current project
+    currentProject = getProject(id);
+
+    // Display the TODO items as part of that project
+    displayItems();
+    displayProjects();
+}
+
+// Display all current projects (including the inboxes)
 function displayProjects() {     
 
     // Empty the project list in the sidebar
@@ -62,6 +72,14 @@ function displayProjects() {
         projectToCreate.innerHTML = projectHTML(proj);
         projectToCreate.setAttribute('data-id', proj.id);
         
+        projectToCreate.addEventListener("click", () => {
+            setCurrentProject(proj.id);
+        });
+
+        if(proj.id == currentProject.id) {
+             projectToCreate.classList.add("current");
+        }
+
         ul_projects.append(projectToCreate);
     });
 }

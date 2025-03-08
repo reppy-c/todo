@@ -157,6 +157,7 @@ h1 {
     margin: 0;
     padding: 0;
     line-height: normal;
+    cursor: pointer;
 }
 
 #sidebar #projects-list li.proj::before {

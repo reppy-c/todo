@@ -16,6 +16,10 @@ export function getProjects() {
     return projects;
 }
 
+export function getProject(id) {
+    return projects.find(project => project.id === id);
+}
+
 export function initializeProjects() {
     const defaultProject = addProject("New Project");
 
