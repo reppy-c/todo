@@ -29,7 +29,14 @@ export function getItems(type, id) {
                 case INBOX_EVERYTHING:
                     // Loop through every project and concat every item array
                     projects.forEach((proj) => {
-                        itemArray = itemArray.concat(proj.getItems());
+                        // itemArray = itemArray.concat(proj.getItems());
+                        // Loop through every item and add every item that is due today or earlier
+                        // Adding the project name at this stage so we don't need to store it within the item
+                        proj.getItems().forEach((todo) => {
+                            todo.projectName = proj.name;       
+                            console.log("todo belongs to project: " + proj.name);               
+                            itemArray.push(todo);
+                        });
                     });
                     return itemArray;
                 break;
@@ -39,7 +46,8 @@ export function getItems(type, id) {
                     projects.forEach((proj) => {
                         // Loop through every item and add every item that is due today or earlier
                         proj.getItems().forEach((todo) => {
-                            if(todo.isTodayOrOverdue())                        
+                            if(todo.isTodayOrOverdue()) 
+                                todo.projectName = proj.name;                          
                                 itemArray.push(todo);
                         });
                     });
@@ -51,7 +59,8 @@ export function getItems(type, id) {
                     projects.forEach((proj) => {
                         // Loop through every item and add every item that is due today or earlier
                         proj.getItems().forEach((todo) => {
-                            if(todo.isPriority())                        
+                            if(todo.isPriority())           
+                                todo.projectName = proj.name;                
                                 itemArray.push(todo);
                         });
                     });

@@ -43,6 +43,7 @@ const itemHTML = (todo) => `
     <div class="checkbox">
     </div>
     <div class="text-items">
+        <span class="project">${todo.projectName}</span>
         <span class="description">${todo.description}</span>
         <span class="second-line">
             <div class="priority ${todo.priority}"></div>
@@ -141,7 +142,10 @@ function displayItems(order) {
         // Add the HTML to the li element
         itemToCreate.innerHTML = itemHTML(todo);
 
-        console.log("value of date is: " + todo.date);
+        // If it's a project, don't display the project name
+        if(currentViewType == TYPE_PROJECT) {
+            itemToCreate.querySelector(".project").style.display = "none";
+        }
 
         // If the date isn't null, then format it
         if(todo.date != null) {

@@ -263,6 +263,15 @@ h1 {
     line-height: normal;
 }
 
+.todo-item .text-items .project {
+    font-family: Nunito;
+    font-size: 0.625rem;
+    font-weight: 400;
+    line-height: normal;
+    padding: 0.0625rem 0;
+    text-transform: uppercase;
+}
+
 .todo-item .text-items .second-line {
     display: flex;
     flex-direction: row;
