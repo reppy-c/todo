@@ -46,7 +46,7 @@ const itemHTML = (todo) => `
         <span class="description">${todo.description}</span>
         <span class="second-line">
             <div class="priority ${todo.priority}"></div>
-            <span class="due-date">${formatDate(todo.date)}</span>
+            <span class="due-date"></span>
         </span>
     </div>
     
@@ -140,6 +140,13 @@ function displayItems(order) {
 
         // Add the HTML to the li element
         itemToCreate.innerHTML = itemHTML(todo);
+
+        console.log("value of date is: " + todo.date);
+
+        // If the date isn't null, then format it
+        if(todo.date != null) {
+            itemToCreate.querySelector(".due-date").innerHTML = formatDate(todo.date);
+        }
 
         // Append the li to the actual DOM
         ul_list.append(itemToCreate);
@@ -241,6 +248,8 @@ function addEventListeners() {
     btn_create_todo.addEventListener("click", () => {
         
         const description = document.querySelector("#todo-description").value;
+        const date = new Date(document.querySelector("#todo-due-date").value);
+        let adjustedDate = null;
 
         // Only validation required is to have a description
         if(description == "") {
@@ -248,11 +257,12 @@ function addEventListeners() {
             return null;
         }
         
-        const date = new Date(document.querySelector("#todo-due-date").value);
-
-        // HTML datepicker is weird and assumes the user is specifying a UTC time.
-        // So we need to adjust it so the date stored (still UTC) is adjusted.
-        const adjustedDate = addMinutes(date, date.getTimezoneOffset());
+        // Only try to adjust date if its a valid date
+        if(date != "Invalid Date") {
+            // HTML datepicker is weird and assumes the user is specifying a UTC time.
+            // So we need to adjust it so the date stored (still UTC) is adjusted.
+            adjustedDate = addMinutes(date, date.getTimezoneOffset());
+        }
 
         // Pull back the priority from the selected radio button
         const priority = document.querySelector('input[name="priority"]:checked').value;
