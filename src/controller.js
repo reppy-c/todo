@@ -146,6 +146,11 @@ function displayItems(order) {
         // If the date isn't null, then format it
         if(todo.date != null) {
             itemToCreate.querySelector(".due-date").innerHTML = formatDate(todo.date);
+
+            // If it's overdue, make it red
+            if(todo.isOverdue()) {
+                itemToCreate.querySelector(".due-date").classList.add("overdue");
+            }
         }
 
         // Append the li to the actual DOM
@@ -287,6 +292,13 @@ function addEventListeners() {
     btn_create_project.addEventListener("click", () => {
         
         const name = document.querySelector("#project-name").value;
+
+        // Validate that there is a name
+        if(name == "") {
+            document.querySelector("#project-name").parentElement.classList.add("error");
+            return null;
+        }
+
         addProject(name);
         displayProjects();
 
@@ -294,6 +306,7 @@ function addEventListeners() {
         hideModal();
         setTimeout(() => {
             document.querySelector("#project-name").value = "";
+            document.querySelector("#project-name").parentElement.classList.remove("error");
         }, 300); 
     });
 }

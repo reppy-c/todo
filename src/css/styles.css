@@ -232,6 +232,10 @@ h1 {
     margin: 0.1875rem 0.75rem 0 0;
 }
 
+.todo-item .priority.normal {
+    display: none;
+}
+
 .todo-item .priority.high{
     content:url('../icons/priority-high.svg');
     align-self: center;
@@ -271,6 +275,10 @@ h1 {
     font-size: 0.75rem;
     font-weight: 400;
     line-height: normal;
+}
+
+.todo-item .text-items .due-date.overdue {
+    color: #DB5A4E;
 }
 
 .todo-item button {
