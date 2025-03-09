@@ -14,7 +14,6 @@ function createProject(projectName) {
 
         let item = createItem(description, date, priority);
         items.push(item);
-
         return(item.id);
     }
 

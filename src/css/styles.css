@@ -128,21 +128,21 @@ h1 {
     margin: 0.375rem 0;
 }
 
-#sidebar .inboxes li.everything::before {
+#sidebar .inboxes #inbox-everything::before {
     content:url('../icons/sidebar-everything.svg');
     align-self: center;
     height: 16px;
     width: 16px;
 }
 
-#sidebar .inboxes li.today::before {
+#sidebar .inboxes #inbox-today::before {
     content:url('../icons/sidebar-today.svg');
     align-self: center;
     height: 16px;
     width: 16px;
 }
 
-#sidebar .inboxes li.high-priority::before {
+#sidebar .inboxes #inbox-priority::before {
     content:url('../icons/sidebar-priority.svg');
     align-self: center;
     height: 16px;

@@ -1,14 +1,13 @@
-import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
+import { TYPE_INBOX, TYPE_PROJECT, INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY, PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
 
 import createItem from "./item.js";
 import createProject from "./project.js";
 import formatDate from "./utils/dateformatter.js";
-import { initializeProjects, getProject, getProjects, addProject } from './manager.js';
+import { initializeProjects, getItems, getProject, getProjects, addProject } from './manager.js';
 
 // Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
 import menuIconURL from "./icons/menu.svg";
 import { addMinutes } from 'date-fns';
-
 
 // Define constants for the different DOM elements
 const ul_list = document.querySelector('#todo-list');
@@ -23,12 +22,18 @@ const btn_close_project = document.querySelector("#close-modal-create-project");
 const btn_create_todo = document.querySelector("#create-todo");
 const btn_create_project = document.querySelector("#create-project");
 const select_todo_project = document.querySelector("#todo-project");
+const btn_everything = document.querySelector("#inbox-everything");
+const btn_today = document.querySelector("#inbox-today");
+const btn_priority = document.querySelector("#inbox-priority");
+
+// The currently selected view type (can be an inbox or a project)
+let currentViewType = TYPE_INBOX;
+
+// The currently selected view (can be one of the inboxes, or a project)
+let currentView = INBOX_EVERYTHING;
 
 // DEPRACATED: this will be replaced by currentView
 let currentProject;
-
-// The currently selected view (can be an inbox or a project)
-let currentView;
 
 // Is set when a modal is displayed so hideModal() can hide it on scrim click
 let currentModal;
@@ -53,23 +58,35 @@ const projectHTML = (proj) => `
     <button data-id="${proj.id}">${proj.name}</button>
 `;
 
-// Set the current project and refresh the project list
-function setCurrentProject(id) {
+// Set the current view (inbox or proj) and refresh the project list
+function setCurrentView(id) {
 
-    // Set the global variable for the current project
-    currentProject = getProject(id);
+    currentProject = id;
+    currentView = id;
 
     // Display the TODO items as part of that project
     displayItems();
     displayProjects();
 }
 
-// Display all current projects (including the inboxes)
+// Render all current projects (including the inboxes)
 function displayProjects() {     
 
     // Empty the project list in the sidebar
     ul_projects.innerHTML = "";
     select_todo_project.innerHTML = "";
+
+    // Deselect the inboxes
+    btn_everything.classList.remove("current");
+    btn_today.classList.remove("current");
+    btn_priority.classList.remove("current");
+
+    // If any of the inboxes are the current view, add class current to it
+    switch(currentView) {
+        case INBOX_EVERYTHING: btn_everything.classList.add("current"); break;
+        case INBOX_TODAY: btn_today.classList.add("current"); break;
+        case INBOX_PRIORITY: btn_priority.classList.add("current"); break;
+    }
 
     // Iterate through each project and render each to the sidebar and the create project modal
     let projects = getProjects().forEach((proj) => {
@@ -84,13 +101,17 @@ function displayProjects() {
         optionToCreate.value = proj.id;
         optionToCreate.textContent = proj.name;
         
+        // Add event listeners to the projects
         projectToCreate.addEventListener("click", () => {
-            setCurrentProject(proj.id);
+            currentViewType = TYPE_PROJECT;
+            currentView = proj.id;
+            setCurrentView(proj.id);
         });
 
-        if(proj.id == currentProject.id) {
-             projectToCreate.classList.add("current");
-             optionToCreate.selected = true;
+        // Highlight which project is being viewed and set default project for the Add TODO modal
+        if(proj.id == currentView) {
+            projectToCreate.classList.add("current");
+            optionToCreate.selected = true;
         }
 
         ul_projects.append(projectToCreate);
@@ -104,8 +125,10 @@ function displayItems(order) {
     // Empty the list before rendering it
     ul_list.innerHTML = "";
 
-    // Iterate through current project
-    currentProject.getItems().forEach((todo) => {
+    // Manager will return either a project's items, or items from multiple projects
+    let itemArray = getItems(currentViewType, currentView);
+
+    itemArray.forEach((todo) => {
         // Create a li element
         const itemToCreate = document.createElement("li");
         
@@ -163,7 +186,31 @@ function hideModal() {
 
 // Attach all the event listeners
 function addEventListeners() {
-    
+
+    // Everything inbox sidebar link
+    btn_everything.addEventListener("click", () => {
+        currentViewType = TYPE_INBOX;
+        currentView = INBOX_EVERYTHING;
+        displayProjects();
+        displayItems();
+    });
+
+    // Today inbox sidebar link
+    btn_today.addEventListener("click", () => {
+        currentViewType = TYPE_INBOX;
+        currentView = INBOX_TODAY;
+        displayProjects();
+        displayItems();
+    });
+
+    // High priority inbox sidebar link
+    btn_priority.addEventListener("click", () => {
+        currentViewType = TYPE_INBOX;
+        currentView = INBOX_PRIORITY;
+        displayProjects();
+        displayItems();
+    });
+
     // Add TODO button
     btn_add_todo.addEventListener("click", () => {
         showModal(div_modal_create_todo);
@@ -203,9 +250,7 @@ function addEventListeners() {
         // Pull back the priority from the selected radio button
         const priority = document.querySelector('input[name="priority"]:checked').value;
 
-
-        //let project = getProject(document.querySelector("#todo-project").value)
-        // Add the item to the current project
+        // Add the item to project selected in the dropdown
         getProject(document.querySelector("#todo-project").value).addItem(description, adjustedDate, priority);
 
         // Clear the list and re-render
@@ -239,8 +284,8 @@ function addEventListeners() {
 export function initializeController() {
 
     // Create default project
-    currentProject = initializeProjects();
-    
+    initializeProjects();
+
     // Display items
     displayItems();
     displayProjects();
