@@ -241,6 +241,13 @@ function addEventListeners() {
     btn_create_todo.addEventListener("click", () => {
         
         const description = document.querySelector("#todo-description").value;
+
+        // Only validation required is to have a description
+        if(description == "") {
+            document.querySelector("#todo-description").parentElement.classList.add("error");
+            return null;
+        }
+        
         const date = new Date(document.querySelector("#todo-due-date").value);
 
         // HTML datepicker is weird and assumes the user is specifying a UTC time.
@@ -260,6 +267,7 @@ function addEventListeners() {
         hideModal();
         setTimeout(() => {
             document.querySelector("#todo-description").value = "";
+            document.querySelector("#todo-description").parentElement.classList.remove("error");
             document.querySelector("#todo-due-date").value = "";
             document.querySelector("#priority-1").checked = true
         }, 300); 

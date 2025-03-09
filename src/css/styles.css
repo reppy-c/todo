@@ -369,21 +369,20 @@ h1 {
     margin: 0;
 }
 
-.modal-create label {
+.modal-create .field label {
     color: #30232C;
     font-family: Nunito;
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.modal-create select {
+.modal-create .field select {
     -webkit-appearance: none;
     appearance: none;
     background-image: url('../icons/dropdown.svg'), -webkit-linear-gradient(top, #fff, #fff);
     background-position: center right;
     background-position-x: calc(100% - 10px);
     background-repeat: no-repeat;
-
 
     color: #30232C;
     font-family: Nunito;
@@ -395,7 +394,7 @@ h1 {
     border-radius: 2px;
 }
 
-.modal-create input {
+.modal-create .field input {
     color: #30232C;
     font-family: Nunito;
     font-size: 0.875rem;
@@ -419,9 +418,34 @@ h1 {
     font-weight: 500;
 }
 
-.modal-create .field-radio {
-    line-height: normal;
+.modal-create .field-radio label {
+    line-height: 120%;
+    font-size: 0.875rem;
 }
+
+/*** Error related styles for fields ***/
+
+.modal-create .field .error {
+    color: #DB5A4E;
+    font-family: Nunito;
+    font-size: 0.8125rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding: 0.125rem 0;
+    display:none;
+}
+
+.modal-create .field.error label, .modal-create .field.error .error  {
+    color: #DB5A4E;
+    display: block;
+}
+
+.modal-create .field.error input {
+    border: 1px solid #DB5A4E;
+}
+
+/*** ***/
 
 .modal-create .button-add {
     width: 100%;

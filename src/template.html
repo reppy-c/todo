@@ -45,13 +45,14 @@
     <div id="modal-create-todo" class="modal-create">
         <h2>Add TODO</h2>
         <div class="field">
+            <label for="todo-description">Description</label>
+            <input type="text" id="todo-description" placeholder="Description" autocomplete="off" />
+            <span id="todo-description-error" class="error">Please enter a description</span>
+        </div>
+        <div class="field">
             <label for="todo-project">Project</label>
             <select id="todo-project" />
             </select>
-        </div>
-        <div class="field">
-            <label for="todo-description">Description</label>
-            <input type="text" id="todo-description" placeholder="Description" autocomplete="off" />
         </div>
         <div class="field">
             <label for="todo-due-date">Due Date (Optional)</label>
