@@ -21,7 +21,7 @@ export function getProject(id) {
 }
 
 export function initializeProjects() {
-    const defaultProject = addProject("New Project");
+    const defaultProject = addProject("Default Project");
 
     defaultProject.addItem("My first item", new Date(), PRIORITY_NORMAL);
     defaultProject.addItem("My second item", new Date(), PRIORITY_HIGH);

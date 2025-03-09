@@ -376,6 +376,25 @@ h1 {
     font-weight: 500;
 }
 
+.modal-create select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url('../icons/dropdown.svg'), -webkit-linear-gradient(top, #fff, #fff);
+    background-position: center right;
+    background-position-x: calc(100% - 10px);
+    background-repeat: no-repeat;
+
+
+    color: #30232C;
+    font-family: Nunito;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 0.563rem 0.563rem;
+    border-radius: 2px;
+}
+
 .modal-create input {
     color: #30232C;
     font-family: Nunito;

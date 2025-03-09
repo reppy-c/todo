@@ -22,9 +22,15 @@ const btn_close_todo = document.querySelector("#close-modal-create-todo");
 const btn_close_project = document.querySelector("#close-modal-create-project");
 const btn_create_todo = document.querySelector("#create-todo");
 const btn_create_project = document.querySelector("#create-project");
+const select_todo_project = document.querySelector("#todo-project");
 
-// Other variables
+// DEPRACATED: this will be replaced by currentView
 let currentProject;
+
+// The currently selected view (can be an inbox or a project)
+let currentView;
+
+// Is set when a modal is displayed so hideModal() can hide it on scrim click
 let currentModal;
 
 // Function to create HTML out of a todo object using template literals
@@ -63,14 +69,20 @@ function displayProjects() {
 
     // Empty the project list in the sidebar
     ul_projects.innerHTML = "";
+    select_todo_project.innerHTML = "";
 
-    // Iterate through each project and render each to the sidebar
+    // Iterate through each project and render each to the sidebar and the create project modal
     let projects = getProjects().forEach((proj) => {
         const projectToCreate = document.createElement("li");
+        const optionToCreate = document.createElement("option");
 
         projectToCreate.classList.add("proj");
         projectToCreate.innerHTML = projectHTML(proj);
         projectToCreate.setAttribute('data-id', proj.id);
+        
+        // This is for the dropdown in the create project modal
+        optionToCreate.value = proj.id;
+        optionToCreate.textContent = proj.name;
         
         projectToCreate.addEventListener("click", () => {
             setCurrentProject(proj.id);
@@ -78,9 +90,11 @@ function displayProjects() {
 
         if(proj.id == currentProject.id) {
              projectToCreate.classList.add("current");
+             optionToCreate.selected = true;
         }
 
         ul_projects.append(projectToCreate);
+        select_todo_project.append(optionToCreate);
     });
 }
 
@@ -189,8 +203,10 @@ function addEventListeners() {
         // Pull back the priority from the selected radio button
         const priority = document.querySelector('input[name="priority"]:checked').value;
 
+
+        //let project = getProject(document.querySelector("#todo-project").value)
         // Add the item to the current project
-        currentProject.addItem(description, adjustedDate, priority);
+        getProject(document.querySelector("#todo-project").value).addItem(description, adjustedDate, priority);
 
         // Clear the list and re-render
         displayItems();

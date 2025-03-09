@@ -45,6 +45,11 @@
     <div id="modal-create-todo" class="modal-create">
         <h2>Add TODO</h2>
         <div class="field">
+            <label for="todo-project">Project</label>
+            <select id="todo-project" />
+            </select>
+        </div>
+        <div class="field">
             <label for="todo-description">Description</label>
             <input type="text" id="todo-description" placeholder="Description" autocomplete="off" />
         </div>
@@ -68,7 +73,7 @@
         <h2>New Project</h2>
         <div class="field">
             <label for="project-name">Project Name</label>
-            <input type="text" id="project-name" placeholder="Description" />
+            <input type="text" id="project-name" placeholder="Description" autocomplete="off" />
         </div>
         <button id="create-project" class="button-add">Create Project</button>
         <button id="close-modal-create-project" class="button-close">
