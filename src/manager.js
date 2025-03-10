@@ -76,7 +76,7 @@ export function getItems(type, id, sort = SORT_PRIORITY) {
             itemArray = project.getItems();
         break;
     }
-    
+
     switch(sort) {
         case SORT_PRIORITY:
             itemArray.sort((a, b) => {
@@ -138,7 +138,7 @@ export function getProject(id) {
 export function initializeProjects() {
     const defaultProject = addProject("Default Project");
 
-    defaultProject.addItem("My first item", new Date(), PRIORITY_NORMAL);
+    defaultProject.addItem("My first item", addDays(new Date(),-1), PRIORITY_NORMAL);
     defaultProject.addItem("My second item", addDays(new Date(),2), PRIORITY_HIGH);
     defaultProject.addItem("My third item", new Date(), PRIORITY_MAX);
 

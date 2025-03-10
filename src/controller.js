@@ -1,13 +1,13 @@
-import { TYPE_INBOX, TYPE_PROJECT, INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY, PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX, SORT_CREATE, SORT_DATE, SORT_NAME, SORT_PRIORITY } from './utils/constants.js';
+import { TYPE_INBOX, TYPE_PROJECT, INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY, PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX, SORT_PRIORITY } from './utils/constants.js';
 
 import createItem from "./item.js";
 import createProject from "./project.js";
 import formatDate from "./utils/dateformatter.js";
 import { initializeProjects, getItems, getProject, getProjects, addProject } from './manager.js';
+import { addMinutes } from 'date-fns';
 
 // Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
 import menuIconURL from "./icons/menu.svg";
-import { addMinutes } from 'date-fns';
 
 // Define constants for the different DOM elements
 const ul_list = document.querySelector('#todo-list');
@@ -27,17 +27,10 @@ const btn_today = document.querySelector("#inbox-today");
 const btn_priority = document.querySelector("#inbox-priority");
 const select_sort = document.querySelector("#sort-list");
 
-// The currently selected view type (can be an inbox or a project)
-let currentViewType = TYPE_INBOX;
-
-// The currently selected view (can be one of the inboxes, or a project)
-let currentView = INBOX_EVERYTHING;
-
-// The currently selected sort mode (name, priority or date)
-let currentSort = SORT_PRIORITY;
-
-// Is set when a modal is displayed so hideModal() can hide it on scrim click
-let currentModal;
+let currentViewType = TYPE_INBOX; // The currently selected view type (can be an inbox or a project)
+let currentView = INBOX_EVERYTHING; // The currently selected view (can be one of the inboxes, or a project)
+let currentSort = SORT_PRIORITY; // The currently selected sort mode (name, priority or date)
+let currentModal; // Is set when a modal is displayed so hideModal() can hide it on scrim click
 
 // Function to create HTML out of a todo object using template literals
 const itemHTML = (todo) => `
@@ -64,7 +57,6 @@ const projectHTML = (proj) => `
 
 // Set the current view (inbox or proj) and refresh the project list
 function setCurrentView(id) {
-
     currentView = id;
 
     // Display the TODO items as part of that project
@@ -74,7 +66,6 @@ function setCurrentView(id) {
 
 // Render all current projects (including the inboxes)
 function displayProjects() {     
-
     // Empty the project list in the sidebar
     ul_projects.innerHTML = "";
     select_todo_project.innerHTML = "";
@@ -124,7 +115,6 @@ function displayProjects() {
 
 // Create a whole bunch of these and attach it to #todo-list ul as children li
 function displayItems() {       
-    
     // Empty the list before rendering it
     ul_list.innerHTML = "";
 
@@ -170,12 +160,10 @@ function displayItems() {
         ul_list.append(itemToCreate);
 
         // Attach event listeners for checkbox and the menu
-
     });
 }
 
 function showModal(modal) {
-    
     // Toggle visibility of the modal and scrim
     div_scrim.style.visibility = 'visible';
     modal.style.visibility = 'visible';
@@ -190,7 +178,6 @@ function showModal(modal) {
 
 // Hide the currently displayed modal and the scrim
 function hideModal() {
-    
     // Remove current showing modal, 
     if(currentModal){
         currentModal.classList.remove('show');
@@ -211,7 +198,6 @@ function hideModal() {
 
 // Attach all the event listeners
 function addEventListeners() {
-
     // Everything inbox sidebar link
     btn_everything.addEventListener("click", () => {
         currentViewType = TYPE_INBOX;
@@ -269,7 +255,6 @@ function addEventListeners() {
 
     // Create TODO button in modal
     btn_create_todo.addEventListener("click", () => {
-        
         const description = document.querySelector("#todo-description").value;
         const date = new Date(document.querySelector("#todo-due-date").value);
         const projectID = document.querySelector("#todo-project").value;
@@ -320,7 +305,6 @@ function addEventListeners() {
 
     // Create Project button in modal
     btn_create_project.addEventListener("click", () => {
-        
         const name = document.querySelector("#project-name").value;
 
         // Validate that there is a name
