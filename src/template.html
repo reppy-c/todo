@@ -16,7 +16,13 @@
 
         <div id="utility-bar">
             <div id="viewing"><img src="icons/everything.svg" />Everything</div>
-            <div id="sort">By Priority<img src="icons/dropdown.svg" /></div> 
+            <div id="sort">
+                <select id="sort-list">
+                    <option value="sort-priority">By Priority</option>
+                    <option value="sort-date">By Due Date</option>
+                    <option value="sort-name">By Name</option>
+                </select>
+            </div> 
         </div>
     </div>
 

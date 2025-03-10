@@ -160,6 +160,10 @@ h1 {
     cursor: pointer;
 }
 
+#sidebar ul li button:hover {
+    font-weight: 800;
+}
+
 #sidebar #projects-list li.proj::before {
     content:url('../icons/project.svg');
     align-self: center;
@@ -169,10 +173,6 @@ h1 {
 
 #sidebar #projects-list a {
     text-decoration: none;
-}
-
-#sidebar #projects-list a:hover {
-    font-weight: 800;
 }
 
 #sidebar ul li.current button{

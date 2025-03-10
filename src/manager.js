@@ -1,9 +1,9 @@
 // This file will manage the projects so that the controller can focus on the DOM manipulation. Eventually it will make use of local storage.
 
-import { INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY, TYPE_INBOX, TYPE_PROJECT, PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
+import { INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY, TYPE_INBOX, TYPE_PROJECT, PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX, SORT_PRIORITY, SORT_DATE, SORT_NAME } from './utils/constants.js';
 import createProject from "./project";
 import createItem from "./item.js";
-import { addDays } from 'date-fns';
+import { addDays, isBefore } from 'date-fns';
 
 
 let projects = [];
@@ -18,27 +18,27 @@ export function addProject(name) {
 // This is the main function that will return items for
 // If it's a project, then return the items from the project
 // If it's an inbox, then return all relevant items from all projects
-export function getItems(type, id) {
+export function getItems(type, id, sort = SORT_PRIORITY) {
+
+    let itemArray = [];
 
     switch (type) {
         case TYPE_INBOX:
-            let itemArray = [];
-
+            
             // If it's an inbox, the id will be the id of the inbox 
             switch(id) {
                 case INBOX_EVERYTHING:
+
                     // Loop through every project and concat every item array
                     projects.forEach((proj) => {
                         // itemArray = itemArray.concat(proj.getItems());
                         // Loop through every item and add every item that is due today or earlier
                         // Adding the project name at this stage so we don't need to store it within the item
                         proj.getItems().forEach((todo) => {
-                            todo.projectName = proj.name;       
-                            console.log("todo belongs to project: " + proj.name);               
+                            todo.projectName = proj.name;                    
                             itemArray.push(todo);
                         });
                     });
-                    return itemArray;
                 break;
 
                 case INBOX_TODAY:
@@ -46,12 +46,13 @@ export function getItems(type, id) {
                     projects.forEach((proj) => {
                         // Loop through every item and add every item that is due today or earlier
                         proj.getItems().forEach((todo) => {
-                            if(todo.isTodayOrOverdue()) 
+
+                            if(todo.isTodayOrOverdue()) {
                                 todo.projectName = proj.name;                          
                                 itemArray.push(todo);
+                            }
                         });
                     });
-                    return itemArray;
                 break;
 
                 case INBOX_PRIORITY:
@@ -59,21 +60,71 @@ export function getItems(type, id) {
                     projects.forEach((proj) => {
                         // Loop through every item and add every item that is due today or earlier
                         proj.getItems().forEach((todo) => {
-                            if(todo.isPriority())           
+                            if(todo.isPriority()) {     
                                 todo.projectName = proj.name;                
                                 itemArray.push(todo);
+                            }
                         });
                     });
-                    return itemArray;
                 break;
             }
         break;
+
         case TYPE_PROJECT: 
             let project = projects.find(project => project.id === id);
 
-            return project.getItems();
+            itemArray = project.getItems();
         break;
     }
+    
+    switch(sort) {
+        case SORT_PRIORITY:
+            itemArray.sort((a, b) => {
+                if (a.priority > b.priority) {
+                  return -1;
+                }
+                if (a.priority < b.priority) {
+                  return 1;
+                }
+                // priority must be equal
+                return 0;
+              });
+        break;
+
+        case SORT_DATE:
+            itemArray.sort((a, b) => {
+
+                if(a.date == null) {
+                    return 1;
+                }
+                if (isBefore(a.date, b.date)) {
+                  return -1;
+                }
+                if (isBefore(b.date, a.date)) {
+                  return 1;
+                }
+                // dates must be equal
+                return 0;
+              });
+        break;
+
+        case SORT_NAME:
+            itemArray.sort((a, b) => {
+                const nameA = a.description.toUpperCase(); // ignore upper and lowercase
+                const nameB = b.description.toUpperCase(); // ignore upper and lowercase
+                if (nameA < nameB) {
+                  return -1;
+                }
+                if (nameA > nameB) {
+                  return 1;
+                }
+                // names must be equal
+                return 0;
+              });
+        break;
+    }
+
+    return itemArray;
 }
 
 export function getProjects() {
@@ -88,7 +139,7 @@ export function initializeProjects() {
     const defaultProject = addProject("Default Project");
 
     defaultProject.addItem("My first item", new Date(), PRIORITY_NORMAL);
-    defaultProject.addItem("My second item", addDays(new Date(),1), PRIORITY_HIGH);
+    defaultProject.addItem("My second item", addDays(new Date(),2), PRIORITY_HIGH);
     defaultProject.addItem("My third item", new Date(), PRIORITY_MAX);
 
     return defaultProject.id;

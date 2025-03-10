@@ -8,7 +8,6 @@ function createItem(description, date, priority) {
     // I like declaring functions this way for readbility
     // Afterwards need to return { functionName }
     function functionName() {
-
     }
     
     function toggleCompleted() {

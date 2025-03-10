@@ -1,4 +1,4 @@
-import { TYPE_INBOX, TYPE_PROJECT, INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY, PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
+import { TYPE_INBOX, TYPE_PROJECT, INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY, PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX, SORT_CREATE, SORT_DATE, SORT_NAME, SORT_PRIORITY } from './utils/constants.js';
 
 import createItem from "./item.js";
 import createProject from "./project.js";
@@ -25,6 +25,7 @@ const select_todo_project = document.querySelector("#todo-project");
 const btn_everything = document.querySelector("#inbox-everything");
 const btn_today = document.querySelector("#inbox-today");
 const btn_priority = document.querySelector("#inbox-priority");
+const select_sort = document.querySelector("#sort-list");
 
 // The currently selected view type (can be an inbox or a project)
 let currentViewType = TYPE_INBOX;
@@ -32,8 +33,8 @@ let currentViewType = TYPE_INBOX;
 // The currently selected view (can be one of the inboxes, or a project)
 let currentView = INBOX_EVERYTHING;
 
-// DEPRACATED: this will be replaced by currentView
-let currentProject;
+// The currently selected sort mode (name, priority or date)
+let currentSort = SORT_PRIORITY;
 
 // Is set when a modal is displayed so hideModal() can hide it on scrim click
 let currentModal;
@@ -44,11 +45,13 @@ const itemHTML = (todo) => `
     </div>
     <div class="text-items">
         <span class="project">${todo.projectName}</span>
-        <span class="description">${todo.description}</span>
+        
         <span class="second-line">
-            <div class="priority ${todo.priority}"></div>
-            <span class="due-date"></span>
+            <div class="priority"></div>
+            <span class="description">${todo.description}</span>
         </span>
+
+        <span class="due-date"></span>
     </div>
     
     <button class="item-menu"><img src="${menuIconURL}" /></button>
@@ -62,7 +65,6 @@ const projectHTML = (proj) => `
 // Set the current view (inbox or proj) and refresh the project list
 function setCurrentView(id) {
 
-    currentProject = id;
     currentView = id;
 
     // Display the TODO items as part of that project
@@ -121,13 +123,13 @@ function displayProjects() {
 }
 
 // Create a whole bunch of these and attach it to #todo-list ul as children li
-function displayItems(order) {       
+function displayItems() {       
     
     // Empty the list before rendering it
     ul_list.innerHTML = "";
 
     // Manager will return either a project's items, or items from multiple projects
-    let itemArray = getItems(currentViewType, currentView);
+    let itemArray = getItems(currentViewType, currentView, currentSort);
 
     itemArray.forEach((todo) => {
         // Create a li element
@@ -155,6 +157,13 @@ function displayItems(order) {
             if(todo.isOverdue()) {
                 itemToCreate.querySelector(".due-date").classList.add("overdue");
             }
+        }
+        
+        // Add appropriate priority class
+        switch(todo.priority) {
+            case PRIORITY_NORMAL: itemToCreate.querySelector(".priority").classList.add("normal"); break;
+            case PRIORITY_HIGH: itemToCreate.querySelector(".priority").classList.add("high"); break;
+            case PRIORITY_MAX: itemToCreate.querySelector(".priority").classList.add("max"); break;
         }
 
         // Append the li to the actual DOM
@@ -227,14 +236,20 @@ function addEventListeners() {
         displayItems();
     });
 
+    // Add Project button
+    btn_add_project.addEventListener("click", () => {
+        showModal(div_modal_create_project);
+    });
+
     // Add TODO button
     btn_add_todo.addEventListener("click", () => {
         showModal(div_modal_create_todo);
     });
 
-    // Add Project button
-    btn_add_project.addEventListener("click", () => {
-        showModal(div_modal_create_project);
+    // Sort button
+    select_sort.addEventListener("change", () => {
+        currentSort = select_sort.value;
+        displayItems();
     });
 
     // Close TODO button
@@ -249,7 +264,6 @@ function addEventListeners() {
 
     // Scrim 
     div_scrim.addEventListener("click", () => {
-        // div_modal_create_todo.classList.remove('show');
         hideModal();
     });
 
@@ -258,6 +272,7 @@ function addEventListeners() {
         
         const description = document.querySelector("#todo-description").value;
         const date = new Date(document.querySelector("#todo-due-date").value);
+        const projectID = document.querySelector("#todo-project").value;
         let adjustedDate = null;
 
         // Only validation required is to have a description
@@ -274,12 +289,23 @@ function addEventListeners() {
         }
 
         // Pull back the priority from the selected radio button
-        const priority = document.querySelector('input[name="priority"]:checked').value;
+        let priority = '';
+
+        switch(document.querySelector('input[name="priority"]:checked').value) {
+            case "normal": priority = PRIORITY_NORMAL; break;
+            case "high": priority = PRIORITY_HIGH; break;
+            case "max": priority = PRIORITY_MAX; break;
+        }
 
         // Add the item to project selected in the dropdown
-        getProject(document.querySelector("#todo-project").value).addItem(description, adjustedDate, priority);
+        getProject(projectID).addItem(description, adjustedDate, priority);
+
+        // Go to project view to ensure user sees the newly added item
+        currentViewType = TYPE_PROJECT;
+        currentView = projectID;
 
         // Clear the list and re-render
+        displayProjects();
         displayItems();
         
         // Now hide modal and reset the fields after its hidden for next time
