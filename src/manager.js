@@ -31,9 +31,8 @@ export function getItems(type, id, sort = SORT_PRIORITY) {
 
                     // Loop through every project and concat every item array
                     projects.forEach((proj) => {
-                        // itemArray = itemArray.concat(proj.getItems());
-                        // Loop through every item and add every item that is due today or earlier
-                        // Adding the project name at this stage so we don't need to store it within the item
+                        // Loop through and add every item that is due today or earlier
+                        // Adding the project name to this temp structure so we don't need to store it within the item
                         proj.getItems().forEach((todo) => {
                             todo.projectName = proj.name;                    
                             itemArray.push(todo);

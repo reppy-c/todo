@@ -15,6 +15,7 @@ const ul_projects = document.querySelector('#projects-list');
 const div_scrim = document.querySelector('#modal-scrim');
 const div_modal_create_todo = document.querySelector('#modal-create-todo');
 const div_modal_create_project = document.querySelector('#modal-create-project');
+const div_modal_sidebar = document.querySelector('#sidebar');
 const btn_add_todo = document.querySelector("#add-todo");
 const btn_add_project = document.querySelector("#add-project");
 const btn_close_todo = document.querySelector("#close-modal-create-todo");
@@ -25,6 +26,7 @@ const select_todo_project = document.querySelector("#todo-project");
 const btn_everything = document.querySelector("#inbox-everything");
 const btn_today = document.querySelector("#inbox-today");
 const btn_priority = document.querySelector("#inbox-priority");
+const btn_viewing = document.querySelector("#current-view");
 const select_sort = document.querySelector("#sort-list");
 
 let currentViewType = TYPE_INBOX; // The currently selected view type (can be an inbox or a project)
@@ -66,6 +68,8 @@ function setCurrentView(id) {
 
 // Render all current projects (including the inboxes)
 function displayProjects() {     
+    let currentViewFriendlyName = "";
+
     // Empty the project list in the sidebar
     ul_projects.innerHTML = "";
     select_todo_project.innerHTML = "";
@@ -77,9 +81,9 @@ function displayProjects() {
 
     // If any of the inboxes are the current view, add class current to it
     switch(currentView) {
-        case INBOX_EVERYTHING: btn_everything.classList.add("current"); break;
-        case INBOX_TODAY: btn_today.classList.add("current"); break;
-        case INBOX_PRIORITY: btn_priority.classList.add("current"); break;
+        case INBOX_EVERYTHING: btn_everything.classList.add("current"); currentViewFriendlyName = "Everything"; break;
+        case INBOX_TODAY: btn_today.classList.add("current"); currentViewFriendlyName = "Today"; break;
+        case INBOX_PRIORITY: btn_priority.classList.add("current");currentViewFriendlyName = "Priority"; break;
     }
 
     // Iterate through each project and render each to the sidebar and the create project modal
@@ -106,11 +110,20 @@ function displayProjects() {
         if(proj.id == currentView) {
             projectToCreate.classList.add("current");
             optionToCreate.selected = true;
+            currentViewFriendlyName = proj.name;
         }
 
         ul_projects.append(projectToCreate);
         select_todo_project.append(optionToCreate);
     });
+
+    // If projects is being refreshed, means something happened that should close the modal in mobile
+    if(currentModal == div_modal_sidebar) {
+        hideModal();
+    }
+
+    // Change the label of the viewing button
+    btn_viewing.innerHTML = currentViewFriendlyName;
 }
 
 // Create a whole bunch of these and attach it to #todo-list ul as children li
@@ -164,6 +177,12 @@ function displayItems() {
 }
 
 function showModal(modal) {
+    
+    // If the currentModal is not null but the sidebar, then hide the sidebar but leave the scrim
+    if(currentModal = div_modal_sidebar) {
+        currentModal.classList.remove('show');
+    }
+
     // Toggle visibility of the modal and scrim
     div_scrim.style.visibility = 'visible';
     modal.style.visibility = 'visible';
@@ -230,6 +249,11 @@ function addEventListeners() {
     // Add TODO button
     btn_add_todo.addEventListener("click", () => {
         showModal(div_modal_create_todo);
+    });
+
+    // Current view button
+    btn_viewing.addEventListener("click", () => {
+        showModal(div_modal_sidebar);
     });
 
     // Sort button
