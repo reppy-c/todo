@@ -20,8 +20,8 @@ const btn_add_todo = document.querySelector("#add-todo");
 const btn_add_project = document.querySelector("#add-project");
 const btn_close_todo = document.querySelector("#close-modal-create-todo");
 const btn_close_project = document.querySelector("#close-modal-create-project");
-const btn_create_todo = document.querySelector("#create-todo");
-const btn_delete_todo = document.querySelector("#delete-todo");
+let btn_create_todo = document.querySelector("#create-todo");
+let btn_delete_todo = document.querySelector("#delete-todo");
 const btn_create_project = document.querySelector("#create-project");
 const select_todo_project = document.querySelector("#todo-project");
 const btn_everything = document.querySelector("#inbox-everything");
@@ -254,6 +254,10 @@ function showModal(modal, todo = null) {
         const createButton = document.querySelector('#create-todo');
         const selectElement = document.querySelector('#todo-project');
 
+        // Remove all existing event listeners from create button and delete button
+        btn_create_todo = removeAllEventListeners(btn_create_todo);
+        btn_delete_todo = removeAllEventListeners(btn_delete_todo);
+
         if(todo) {
             // It's an Edit TODO
             modalTitle.textContent = 'Edit TODO';
@@ -281,6 +285,7 @@ function showModal(modal, todo = null) {
             }
 
             btn_create_todo.addEventListener("click", () => handleUpdateTODO(todo), {once: true});
+            btn_delete_todo.addEventListener("click", () => deleteTODO(todo), {once: true});
         }
         else {
             // It's an Add TODO
@@ -333,6 +338,27 @@ function hideModal() {
     }, 300); // Match the duration of the CSS transition
 }
 
+
+function deleteTODO(previousTODO) {
+    const projectID = document.querySelector("#todo-project").value;
+
+    // Delete item from this project
+    getProject(getItemProject(previousTODO.id)).deleteItem(previousTODO.id);
+
+    // Clear the list and re-render
+    displayProjects();
+    displayItems();
+    
+    // Now hide modal and reset the fields after its hidden for next time
+    hideModal();
+
+    setTimeout(() => {
+        document.querySelector("#todo-description").value = "";
+        document.querySelector("#todo-description").parentElement.classList.remove("error");
+        document.querySelector("#todo-due-date").value = "";
+        document.querySelector("#priority-1").checked = true
+    }, 300); 
+}
 
 function handleCreateTODO() {
 
@@ -418,12 +444,12 @@ function handleUpdateTODO(previousTODO) {
         getProject(projectID).updateItem(previousTODO.id, description, adjustedDate, priority);
     }
     else {
+        // Create new item in the new project and then delete this one
+        getProject(projectID).addItem(description, adjustedDate, priority);
 
+        // Delete item from this project
+        getProject(getItemProject(previousTODO.id)).deleteItem(previousTODO.id);
     }
-    
-    // Otherwise need to delete it in this project, and create a new one in the new project
-    // as well as swap views to show the new project if we're currently viewing a project.
-    // If we're viewing an inbox, then we don't need to update it.
 
     // Clear the list and re-render
     displayProjects();
@@ -438,6 +464,12 @@ function handleUpdateTODO(previousTODO) {
         document.querySelector("#todo-due-date").value = "";
         document.querySelector("#priority-1").checked = true
     }, 300); 
+}
+
+function removeAllEventListeners(element) {
+    const newElement = element.cloneNode(true);
+    element.parentNode.replaceChild(newElement, element);
+    return newElement;
 }
 
 // This is the one function that will be called by index.js

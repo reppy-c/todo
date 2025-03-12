@@ -1,5 +1,4 @@
 import createItem from "./item.js";
-import { PRIORITY_NORMAL, PRIORITY_HIGH, PRIORITY_MAX } from './utils/constants.js';
 
 // Factory function for creating projects
 function createProject(projectName) {
@@ -23,12 +22,16 @@ function createProject(projectName) {
         itemToUpdate.description = description;
     }
 
+    function deleteItem(id) {
+        items = items.filter(item => item.id !== id);
+    }
+
     // Returns a copy of list of items in project, parameter determines the order its returned in
     function getItems() {
         return items;
     }
 
-    return {id, name, addItem, getItems, updateItem};
+    return {id, name, addItem, getItems, updateItem, deleteItem};
 }
 
 export default createProject;
