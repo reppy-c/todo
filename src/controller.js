@@ -3,11 +3,11 @@ import { TYPE_INBOX, TYPE_PROJECT, INBOX_EVERYTHING, INBOX_TODAY, INBOX_PRIORITY
 import createItem from "./item.js";
 import createProject from "./project.js";
 import formatDate from "./utils/dateformatter.js";
-import { initializeProjects, getItems, getProject, getProjects, addProject } from './manager.js';
+import { initializeProjects, getItems, getProject, getProjects, addProject, getItemProject } from './manager.js';
 import { addMinutes } from 'date-fns';
 
 // Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
-import menuIconURL from "./icons/menu.svg";
+import editIconURL from "./icons/menu.svg";
 
 // Define constants for the different DOM elements
 const ul_list = document.querySelector('#todo-list');
@@ -21,6 +21,7 @@ const btn_add_project = document.querySelector("#add-project");
 const btn_close_todo = document.querySelector("#close-modal-create-todo");
 const btn_close_project = document.querySelector("#close-modal-create-project");
 const btn_create_todo = document.querySelector("#create-todo");
+const btn_delete_todo = document.querySelector("#delete-todo");
 const btn_create_project = document.querySelector("#create-project");
 const select_todo_project = document.querySelector("#todo-project");
 const btn_everything = document.querySelector("#inbox-everything");
@@ -33,6 +34,7 @@ let currentViewType = TYPE_INBOX; // The currently selected view type (can be an
 let currentView = INBOX_EVERYTHING; // The currently selected view (can be one of the inboxes, or a project)
 let currentSort = SORT_PRIORITY; // The currently selected sort mode (name, priority or date)
 let currentModal; // Is set when a modal is displayed so hideModal() can hide it on scrim click
+//let previousTODO; // For when updating a TODO, storing old values to compare against
 
 // Function to create HTML out of a todo object using template literals
 const itemHTML = (todo) => `
@@ -49,7 +51,7 @@ const itemHTML = (todo) => `
         <span class="due-date"></span>
     </div>
     
-    <button class="item-menu"><img src="${menuIconURL}" /></button>
+    <button class="item-edit"><img src="${editIconURL}" /></button>
 `;
 
 // Function to create HTML out of a project using template literals
@@ -64,6 +66,70 @@ function setCurrentView(id) {
     // Display the TODO items as part of that project
     displayItems();
     displayProjects();
+}
+
+// Attach all the event listeners
+function addEventListeners() {
+    // Everything inbox sidebar link
+    btn_everything.addEventListener("click", () => {
+        currentViewType = TYPE_INBOX;
+        currentView = INBOX_EVERYTHING;
+        displayProjects();
+        displayItems();
+    });
+
+    // Today inbox sidebar link
+    btn_today.addEventListener("click", () => {
+        currentViewType = TYPE_INBOX;
+        currentView = INBOX_TODAY;
+        displayProjects();
+        displayItems();
+    });
+
+    // High priority inbox sidebar link
+    btn_priority.addEventListener("click", () => {
+        currentViewType = TYPE_INBOX;
+        currentView = INBOX_PRIORITY;
+        displayProjects();
+        displayItems();
+    });
+
+    // Buttons that show modals, including the sidebar
+    btn_add_project.addEventListener("click", () => showModal(div_modal_create_project));
+    btn_add_todo.addEventListener("click", () => showModal(div_modal_create_todo));
+    btn_viewing.addEventListener("click", () => showModal(div_modal_sidebar));
+
+    // Sort button
+    select_sort.addEventListener("change", () => {
+        currentSort = select_sort.value;
+        displayItems();
+    });
+
+    // Close buttons and scrim action
+    btn_close_todo.addEventListener("click", hideModal);
+    btn_close_project.addEventListener("click", hideModal);
+    div_scrim.addEventListener("click", hideModal);
+
+    // Create Project button in modal
+    btn_create_project.addEventListener("click", () => {
+        const name = document.querySelector("#project-name").value;
+
+        // Validate that there is a name
+        if(name == "") {
+            document.querySelector("#project-name").parentElement.classList.add("error");
+            return null;
+        }
+
+        addProject(name);
+        displayProjects();
+
+        // Now hide modal and reset the fields after its hidden for next time
+        hideModal();
+        setTimeout(() => {
+            document.querySelector("#project-name").value = "";
+            document.querySelector("#project-name").parentElement.classList.remove("error");
+        }, 300); 
+    });
 }
 
 // Render all current projects (including the inboxes)
@@ -169,15 +235,64 @@ function displayItems() {
             case PRIORITY_MAX: itemToCreate.querySelector(".priority").classList.add("max"); break;
         }
 
+        // Attach event listeners for checkbox and the edit
+        itemToCreate.querySelector(".item-edit").addEventListener("click", () => {
+            showModal(div_modal_create_todo, todo);
+        });
+
         // Append the li to the actual DOM
         ul_list.append(itemToCreate);
-
-        // Attach event listeners for checkbox and the menu
     });
 }
 
-function showModal(modal) {
-    
+// Open a modal, if a todo is passed through as an argument, its an edit
+function showModal(modal, todo = null) {
+     
+    if(modal == div_modal_create_todo) {
+        // The modal is a Create TODO    
+        const modalTitle = document.querySelector('#modal-create-todo h2');
+        const createButton = document.querySelector('#create-todo');
+        const selectElement = document.querySelector('#todo-project');
+
+        if(todo) {
+            // It's an Edit TODO
+            modalTitle.textContent = 'Edit TODO';
+            createButton.textContent = 'Save Changes';
+            btn_delete_todo.style.display = 'block';
+
+            // Store the previous todo information
+            // previousTODO = todo;
+
+            // Pre-fill fields
+            document.querySelector("#todo-description").value = todo.description;
+            document.querySelector("#todo-due-date").value = todo.date.toISOString().split('T')[0];
+            document.querySelector("#todo-project").value = todo.projectName;
+
+            // Select project
+            let projectID = getItemProject(todo.id);
+            const specificOption = selectElement.querySelector(`option[value="${projectID}"]`);
+            specificOption.selected = true;
+
+            // Select priority
+            switch(todo.priority) {
+                case PRIORITY_NORMAL: document.querySelector("#priority-1").checked = true;; break;
+                case PRIORITY_HIGH: document.querySelector("#priority-2").checked = true;; break;
+                case PRIORITY_MAX: document.querySelector("#priority-3").checked = true;; break;
+            }
+
+            btn_create_todo.addEventListener("click", () => handleUpdateTODO(todo), {once: true});
+        }
+        else {
+            // It's an Add TODO
+            modalTitle.textContent = 'Add TODO';
+            createButton.textContent = 'Create TODO';
+            btn_delete_todo.style.display = 'none';
+
+            // NEED TO EMPTY THE FIELDS AND REPLACE EVENT LISTENER ON CREATE BUTTON
+            btn_create_todo.addEventListener("click", handleCreateTODO, {once: true});
+        }
+    }
+
     // If the currentModal is not null but the sidebar, then hide the sidebar but leave the scrim
     if(currentModal = div_modal_sidebar) {
         currentModal.classList.remove('show');
@@ -193,16 +308,19 @@ function showModal(modal) {
     
     // Set global variable for hiding later
     currentModal = modal;
+    
 }
 
 // Hide the currently displayed modal and the scrim
 function hideModal() {
+
     // Remove current showing modal, 
     if(currentModal){
         currentModal.classList.remove('show');
 
         setTimeout(() => {
             currentModal.style.visibility = 'hidden';
+            
             currentModal = null;
         }, 300); // Match the duration of the CSS transition
     }
@@ -215,138 +333,111 @@ function hideModal() {
     }, 300); // Match the duration of the CSS transition
 }
 
-// Attach all the event listeners
-function addEventListeners() {
-    // Everything inbox sidebar link
-    btn_everything.addEventListener("click", () => {
-        currentViewType = TYPE_INBOX;
-        currentView = INBOX_EVERYTHING;
-        displayProjects();
-        displayItems();
-    });
 
-    // Today inbox sidebar link
-    btn_today.addEventListener("click", () => {
-        currentViewType = TYPE_INBOX;
-        currentView = INBOX_TODAY;
-        displayProjects();
-        displayItems();
-    });
+function handleCreateTODO() {
 
-    // High priority inbox sidebar link
-    btn_priority.addEventListener("click", () => {
-        currentViewType = TYPE_INBOX;
-        currentView = INBOX_PRIORITY;
-        displayProjects();
-        displayItems();
-    });
+    const description = document.querySelector("#todo-description").value;
+    const date = new Date(document.querySelector("#todo-due-date").value);
+    const projectID = document.querySelector("#todo-project").value;
+    let adjustedDate = null;
 
-    // Add Project button
-    btn_add_project.addEventListener("click", () => {
-        showModal(div_modal_create_project);
-    });
+    // Only validation required is to have a description
+    if(description == "") {
+        document.querySelector("#todo-description").parentElement.classList.add("error");
+        return null;
+    }
+    
+    // Only try to adjust date if its a valid date
+    if(date != "Invalid Date") {
+        // HTML datepicker is weird and assumes the user is specifying a UTC time.
+        // So we need to adjust it so the date stored (still UTC) is adjusted.
+        adjustedDate = addMinutes(date, date.getTimezoneOffset());
+    }
 
-    // Add TODO button
-    btn_add_todo.addEventListener("click", () => {
-        showModal(div_modal_create_todo);
-    });
+    // Pull back the priority from the selected radio button
+    let priority = '';
 
-    // Current view button
-    btn_viewing.addEventListener("click", () => {
-        showModal(div_modal_sidebar);
-    });
+    switch(document.querySelector('input[name="priority"]:checked').value) {
+        case "normal": priority = PRIORITY_NORMAL; break;
+        case "high": priority = PRIORITY_HIGH; break;
+        case "max": priority = PRIORITY_MAX; break;
+    }
 
-    // Sort button
-    select_sort.addEventListener("change", () => {
-        currentSort = select_sort.value;
-        displayItems();
-    });
+    // Add the item to project selected in the dropdown
+    getProject(projectID).addItem(description, adjustedDate, priority);
 
-    // Close TODO button
-    btn_close_todo.addEventListener("click", () => {
-        hideModal();
-    });
+    // Go to project view to ensure user sees the newly added item
+    currentViewType = TYPE_PROJECT;
+    currentView = projectID;
 
-    // Close Project button
-    btn_close_project.addEventListener("click", () => {
-        hideModal();
-    });
+    // Clear the list and re-render
+    displayProjects();
+    displayItems();
+    
+    // Now hide modal and reset the fields after its hidden for next time
+    hideModal();
 
-    // Scrim 
-    div_scrim.addEventListener("click", () => {
-        hideModal();
-    });
+    setTimeout(() => {
+        document.querySelector("#todo-description").value = "";
+        document.querySelector("#todo-description").parentElement.classList.remove("error");
+        document.querySelector("#todo-due-date").value = "";
+        document.querySelector("#priority-1").checked = true
+    }, 300); 
+}
 
-    // Create TODO button in modal
-    btn_create_todo.addEventListener("click", () => {
-        const description = document.querySelector("#todo-description").value;
-        const date = new Date(document.querySelector("#todo-due-date").value);
-        const projectID = document.querySelector("#todo-project").value;
-        let adjustedDate = null;
+function handleUpdateTODO(previousTODO) {
+    const description = document.querySelector("#todo-description").value;
+    const date = new Date(document.querySelector("#todo-due-date").value);
+    const projectID = document.querySelector("#todo-project").value;
+    let adjustedDate = null;
 
-        // Only validation required is to have a description
-        if(description == "") {
-            document.querySelector("#todo-description").parentElement.classList.add("error");
-            return null;
-        }
-        
-        // Only try to adjust date if its a valid date
-        if(date != "Invalid Date") {
-            // HTML datepicker is weird and assumes the user is specifying a UTC time.
-            // So we need to adjust it so the date stored (still UTC) is adjusted.
-            adjustedDate = addMinutes(date, date.getTimezoneOffset());
-        }
+    // Only validation required is to have a description
+    if(description == "") {
+        document.querySelector("#todo-description").parentElement.classList.add("error");
+        return null;
+    }
+    
+    // Only try to adjust date if its a valid date
+    if(date != "Invalid Date") {
+        // HTML datepicker is weird and assumes the user is specifying a UTC time.
+        // So we need to adjust it so the date stored (still UTC) is adjusted.
+        adjustedDate = addMinutes(date, date.getTimezoneOffset());
+    }
 
-        // Pull back the priority from the selected radio button
-        let priority = '';
+    // Pull back the priority from the selected radio button
+    let priority = '';
 
-        switch(document.querySelector('input[name="priority"]:checked').value) {
-            case "normal": priority = PRIORITY_NORMAL; break;
-            case "high": priority = PRIORITY_HIGH; break;
-            case "max": priority = PRIORITY_MAX; break;
-        }
+    switch(document.querySelector('input[name="priority"]:checked').value) {
+        case "normal": priority = PRIORITY_NORMAL; break;
+        case "high": priority = PRIORITY_HIGH; break;
+        case "max": priority = PRIORITY_MAX; break;
+    }
 
-        // Add the item to project selected in the dropdown
-        getProject(projectID).addItem(description, adjustedDate, priority);
+    // Same project, just update in place
+    if(projectID == getItemProject(previousTODO.id)) {
+        getProject(projectID).updateItem(previousTODO.id, description, adjustedDate, priority);
+    }
+    else {
 
-        // Go to project view to ensure user sees the newly added item
-        currentViewType = TYPE_PROJECT;
-        currentView = projectID;
+    }
+    
+    // Otherwise need to delete it in this project, and create a new one in the new project
+    // as well as swap views to show the new project if we're currently viewing a project.
+    // If we're viewing an inbox, then we don't need to update it.
 
-        // Clear the list and re-render
-        displayProjects();
-        displayItems();
-        
-        // Now hide modal and reset the fields after its hidden for next time
-        hideModal();
-        setTimeout(() => {
-            document.querySelector("#todo-description").value = "";
-            document.querySelector("#todo-description").parentElement.classList.remove("error");
-            document.querySelector("#todo-due-date").value = "";
-            document.querySelector("#priority-1").checked = true
-        }, 300); 
-    });
+    // Clear the list and re-render
+    displayProjects();
+    displayItems();
+    
+    // Now hide modal and reset the fields after its hidden for next time
+    hideModal();
 
-    // Create Project button in modal
-    btn_create_project.addEventListener("click", () => {
-        const name = document.querySelector("#project-name").value;
-
-        // Validate that there is a name
-        if(name == "") {
-            document.querySelector("#project-name").parentElement.classList.add("error");
-            return null;
-        }
-
-        addProject(name);
-        displayProjects();
-
-        // Now hide modal and reset the fields after its hidden for next time
-        hideModal();
-        setTimeout(() => {
-            document.querySelector("#project-name").value = "";
-            document.querySelector("#project-name").parentElement.classList.remove("error");
-        }, 300); 
-    });
+    setTimeout(() => {
+        document.querySelector("#todo-description").value = "";
+        document.querySelector("#todo-description").parentElement.classList.remove("error");
+        document.querySelector("#todo-due-date").value = "";
+        document.querySelector("#priority-1").checked = true
+    }, 300); 
 }
 
 // This is the one function that will be called by index.js

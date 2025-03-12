@@ -513,6 +513,28 @@ h1 {
     }       
 }
 
+.modal-create .button-delete {
+    width: 100%;
+    border-radius: 0.25rem;
+    border: 0;
+    background: #DB5A4E;
+    color: #FFF;
+    padding: 0.813rem 0;
+    margin-top: -0.5rem;
+    cursor: pointer;
+
+    font-family: Nunito;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: normal;
+
+    @media (min-width: 1024px) {
+        width: auto;
+        padding: 0.813rem 4rem;
+    }       
+}
+
+
 .button-close {
     position: absolute;
     top: 0.875rem;

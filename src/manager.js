@@ -134,6 +134,17 @@ export function getProject(id) {
     return projects.find(project => project.id === id);
 }
 
+// Return the ID of an item's project
+export function getItemProject(id) {
+    const project = projects.find(proj => proj.getItems().some(item => item.id === id));
+
+    if (project) {
+        return project.id;
+    } else {
+        return null; // or handle it in another appropriate way
+    }
+}
+
 export function initializeProjects() {
     const defaultProject = addProject("Default Project");
 
