@@ -7,7 +7,7 @@ import { initializeProjects, getItems, getProject, getProjects, addProject, getI
 import { addMinutes } from 'date-fns';
 
 // Importing the menu icon to use in a TODO item, because the filepath within the template literal is not being caught by webpack
-import editIconURL from "./icons/menu.svg";
+import editIconURL from "./icons/edit.svg";
 
 // Define constants for the different DOM elements
 const ul_list = document.querySelector('#todo-list');
@@ -28,6 +28,7 @@ const btn_everything = document.querySelector("#inbox-everything");
 const btn_today = document.querySelector("#inbox-today");
 const btn_priority = document.querySelector("#inbox-priority");
 const btn_viewing = document.querySelector("#current-view");
+const icn_viewing = document.querySelector("#current-view-icon");
 const select_sort = document.querySelector("#sort-list");
 
 let currentViewType = TYPE_INBOX; // The currently selected view type (can be an inbox or a project)
@@ -41,16 +42,14 @@ const itemHTML = (todo) => `
     <div class="checkbox">
     </div>
     <div class="text-items">
-        <span class="project">${todo.projectName}</span>
-        
         <span class="second-line">
-            <div class="priority"></div>
             <span class="description">${todo.description}</span>
+            <div class="priority"></div>
         </span>
 
         <span class="due-date"></span>
     </div>
-    
+    <span class="project">${todo.projectName}</span>
     <button class="item-edit"><img src="${editIconURL}" /></button>
 `;
 
@@ -98,6 +97,7 @@ function addEventListeners() {
     btn_add_project.addEventListener("click", () => showModal(div_modal_create_project));
     btn_add_todo.addEventListener("click", () => showModal(div_modal_create_todo));
     btn_viewing.addEventListener("click", () => showModal(div_modal_sidebar));
+    icn_viewing.addEventListener("click", () => showModal(div_modal_sidebar));
 
     // Sort button
     select_sort.addEventListener("change", () => {
@@ -240,6 +240,10 @@ function displayItems() {
             showModal(div_modal_create_todo, todo);
         });
 
+        itemToCreate.querySelector(".checkbox").addEventListener("click", () => {
+            deleteTODO(todo);
+        });
+
         // Append the li to the actual DOM
         ul_list.append(itemToCreate);
     });
@@ -263,9 +267,6 @@ function showModal(modal, todo = null) {
             modalTitle.textContent = 'Edit TODO';
             createButton.textContent = 'Save Changes';
             btn_delete_todo.style.display = 'block';
-
-            // Store the previous todo information
-            // previousTODO = todo;
 
             // Pre-fill fields
             document.querySelector("#todo-description").value = todo.description;
@@ -322,9 +323,12 @@ function hideModal() {
     // Remove current showing modal, 
     if(currentModal){
         currentModal.classList.remove('show');
-
+    
         setTimeout(() => {
-            currentModal.style.visibility = 'hidden';
+            if(currentModal != div_modal_sidebar) {
+                // Don't hide the sidebar modal in case someone goes from mobile to desktop and needs to see it
+                currentModal.style.visibility = 'hidden';
+            }
             
             currentModal = null;
         }, 300); // Match the duration of the CSS transition
